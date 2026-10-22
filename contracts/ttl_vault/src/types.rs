@@ -192,6 +192,7 @@ pub const WITHDRAWAL_APPROVAL_GRANTED_TOPIC: Symbol = symbol_short!("wd_grant");
 pub const WITHDRAWAL_APPROVAL_DENIED_TOPIC: Symbol = symbol_short!("wd_deny");
 // Issue #1848: WebAuthn credential backup eligibility
 pub const PASSKEY_WEBAUTHN_BACKUP_SET_TOPIC: Symbol = symbol_short!("pk_wbk");
+pub const SET_PASSKEY_BACKUP_ELIGIBLE_TOPIC: Symbol = PASSKEY_WEBAUTHN_BACKUP_SET_TOPIC;
 // Issue #563: passkey recovery
 pub const PASSKEY_RECOVERY_INITIATED_TOPIC: Symbol = symbol_short!("pk_rec");
 pub const PASSKEY_RECOVERED_TOPIC: Symbol = symbol_short!("pk_rcvd");
@@ -571,6 +572,7 @@ pub enum StorageKey {
     PasskeyPublicKey(u64, BytesN<32>),
     // Issue #1288: multi-beneficiary splits and previously-missing storage keys
     AcceptanceConditions(u64),
+    ConditionalAcceptance(u64),
     AdminTransferProposedAt,
     BeneficiaryClaimDelegation(u64),
     BeneficiaryConflict(u64),
@@ -579,8 +581,6 @@ pub enum StorageKey {
     ConflictDisputeWindow(u64),
     /// Owner-designated priority beneficiary address for conflict tie-breaking.
     ConflictPriorityBeneficiary(u64),
-    /// Identity oracle contract address that KYC-gates beneficiary claims for a vault.
-    BeneficiaryIdentityOracle(u64),
     /// Marks a beneficiary of a vault as identity-verified by the vault's identity oracle.
     BeneficiaryIdentityVerified(u64, Address),
     BeneficiaryVaultLimit,
@@ -1189,15 +1189,6 @@ pub struct BeneficiaryConditionResponse {
     pub threshold: i128,
     pub timestamp: u64,
     pub reason: Option<String>,
-}
-
-/// Unified beneficiary condition response - Issue #1849
-/// Represents either a conditional acceptance or conditional decline from a beneficiary
-#[contracttype]
-#[derive(Clone)]
-pub enum BeneficiaryConditionResponse {
-    Acceptance(BeneficiaryConditionalAcceptance),
-    Decline(BeneficiaryConditionalDecline),
 }
 
 /// Beneficiary delegation of claim rights to a trusted proxy address - Issue #944
