@@ -1150,7 +1150,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
   /api/vaults/{vault_id}/vesting/bonus:
-=======
     get:
       summary: Get vesting bonus configuration
       operationId: getVestingBonus
